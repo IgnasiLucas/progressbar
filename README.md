@@ -11,9 +11,11 @@ If pyrad's step 3 is already running, just call progressbar.sh from the working
 directory where pyrad created the edits/ and clust.XX/ folders. In a few seconds,
 it will print a progress bar like this, for each sample:
 
- Sample: sample_name
+> Sample: sample_name
  
- 0%       20%       40%       60%       80%      100%
- |----+----|----+----|----+----|----+----|----+----|
- |||||||||
+> 0%       20%       40%       60%       80%      100%
+
+> |----+----|----+----|----+----|----+----|----+----|
+
+> |||||||||
 
