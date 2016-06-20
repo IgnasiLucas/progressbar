@@ -45,7 +45,7 @@ if [ $NumSamples -gt 1 ]; then
 else
    if [ $NumSamples -eq 1 ]; then
       SAMPLE=`basename -s .derep edits/*.derep`
-      $DIR/SampleBar.sh .$CLUST $SAMPLE &
+      $DIR/SampleBar.sh $CLUST $SAMPLE &
       tail -f .$CLUST.$SAMPLE.bar
    fi
 fi
