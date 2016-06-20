@@ -5,7 +5,7 @@
 # Prints a progress bar to Deren Eaton's pyrad's step 3.
 # This step uses vsearch to cluster sequenced reads within
 # samples. It usually takes a long time, and I found it useful
-# to estimate how long it would take.
+# to estimate how long it will take.
 #
 
 if [ ! -d edits ]; then
@@ -27,29 +27,20 @@ else
    fi
 fi
 
-for SAMPLE in `ls -1 edits/*.derep | xargs basename -s .derep`; do
-   echo    "Sample: $SAMPLE"
-   echo
-   echo    "0%       20%       40%       60%       80%      100%"
-   echo    "|----+----|----+----|----+----|----+----|----+----|"
-   echo -n "|"
-   SEQNUM=`grep -e "^>" edits/$SAMPLE.derep | wc -l`
-   SEQDONE=`gawk '(FILENAME~/\.u$/){F[$1]=1;F[$2]=1}((FILENAME~/\._temp$/) && (/^>/)){F[substr($1,2)]=1}END{for (f in F) N++; print N}' $CLUST/$SAMPLE.u $CLUST/$SAMPLE._temp`
-   PERCENTDONE=$(( $SEQDONE * 100 / $SEQNUM ))
-   PRINTED=0
-   while [ $PRINTED -lt $PERCENTDONE ]; do
-      echo -n "|"
-      PRINTED=$(( $PRINTED + 2 ))
+NumSamples=`ls -1 edits/*.derep | wc -l`
+
+if [ $NumSamples -gt 1 ]; then
+   for SAMPLE in `ls -1 edits/*.derep | xargs basename -s .derep`; do
+      SampleBar.sh $CLUST $SAMPLE &
+      echo -e "To visualize progress bar of sample $SAMPLE, type 'tail -f .$CLUST.$SAMPLE.bar'"
    done
-   while [ $PERCENTDONE -lt 100 ]; do
-      sleep 1h
-      SEQDONE=`gawk '(FILENAME~/\.u$/){F[$1]=1;F[$2]=1}((FILENAME~/\._temp$/) && (/^>/)){F[substr($1,2)]=1}END{for (f in F) N++; print N}' $CLUST/$SAMPLE.u $CLUST/$SAMPLE._temp`
-      PERCENTDONE=$(( $SEQDONE * 100 / $SEQNUM ))
-      while [ $PRINTED -lt $PERCENTDONE ]; do
-         echo -n "|"
-         PRINTED=$(( $PRINTED + 2 ))
-      done
-   done
-   echo
-   echo
-done
+else
+   if [ $NumSamples -eq 1 ]; then
+      SAMPLE=`basename -s .derep edits/*.derep`
+      SampleBar.sh .$CLUST $SAMPLE &
+      tail -f .$CLUST.$SAMPLE.bar
+   fi
+fi
+wait
+echo "Step 3 finished."
+rm .$CLUST.*.bar
