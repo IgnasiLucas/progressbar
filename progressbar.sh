@@ -29,15 +29,23 @@ fi
 
 NumSamples=`ls -1 edits/*.derep | wc -l`
 
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+   SOURCE="$(readlink "$SOURCE")"
+   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
 if [ $NumSamples -gt 1 ]; then
    for SAMPLE in `ls -1 edits/*.derep | xargs basename -s .derep`; do
-      SampleBar.sh $CLUST $SAMPLE &
+      $DIR/SampleBar.sh $CLUST $SAMPLE &
       echo -e "To visualize progress bar of sample $SAMPLE, type 'tail -f .$CLUST.$SAMPLE.bar'"
    done
 else
    if [ $NumSamples -eq 1 ]; then
       SAMPLE=`basename -s .derep edits/*.derep`
-      SampleBar.sh .$CLUST $SAMPLE &
+      $DIR/SampleBar.sh .$CLUST $SAMPLE &
       tail -f .$CLUST.$SAMPLE.bar
    fi
 fi
