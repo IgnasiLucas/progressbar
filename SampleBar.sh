@@ -8,7 +8,7 @@ if [ ! -e .$CLUST.$SAMPLE.bar ]; then
    echo                                                           >> .$CLUST.$SAMPLE.bar
    echo    "0%       20%       40%       60%       80%      100%" >> .$CLUST.$SAMPLE.bar
    echo    "|----+----|----+----|----+----|----+----|----+----| " >> .$CLUST.$SAMPLE.bar
-   echo -n "|"
+   echo -n "|"                                                    >> .$CLUST.$SAMPLE.bar
    PRINTED=0
 else
    PRINTED=$(( $(( $(tail -n 1 .$CLUST.$SAMPLE.bar | wc -c) - 1 )) * 2 ))
@@ -31,4 +31,3 @@ while [ $PERCENTDONE -lt 100 ]; do
 done
 echo >> .$CLUST.$SAMPLE.bar
 echo >> .$CLUST.$SAMPLE.bar
-
